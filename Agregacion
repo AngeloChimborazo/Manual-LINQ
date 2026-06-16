@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agregación | Manual LINQ C#</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Manual LINQ <span>C#</span></div>
+  <a href="index.html">Inicio</a>
+  <a href="introduccion.html">Introducción</a>
+  <a href="where.html">Where</a>
+  <a href="select.html">Select</a>
+  <a href="orderby.html">OrderBy</a>
+  <a href="groupby.html">GroupBy</a>
+  <a href="agregacion.html" class="active">Agregación</a>
+  <a href="join.html">Join</a>
+  <a href="ejercicios.html">Ejercicios</a>
+</nav>
+
+<main class="page">
+  <div class="page-header">
+    <div class="page-eyebrow">Capítulo 6 · Agregación</div>
+    <h1>Operadores de Agregación</h1>
+    <p>Calculan un único valor a partir de todos los elementos de una colección.</p>
+  </div>
+
+  <div class="section">
+    <h2>Tabla de operadores</h2>
+    <table>
+      <thead><tr><th>Operador</th><th>Descripción</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td><code>Count()</code></td><td>Cuenta los elementos</td><td><code>lista.Count()</code></td></tr>
+        <tr><td><code>Sum()</code></td><td>Suma todos los valores</td><td><code>lista.Sum(x => x.Precio)</code></td></tr>
+        <tr><td><code>Min()</code></td><td>Valor mínimo</td><td><code>lista.Min(x => x.Edad)</code></td></tr>
+        <tr><td><code>Max()</code></td><td>Valor máximo</td><td><code>lista.Max(x => x.Edad)</code></td></tr>
+        <tr><td><code>Average()</code></td><td>Promedio de los valores</td><td><code>lista.Average(x => x.Nota)</code></td></tr>
+        <tr><td><code>First()</code></td><td>Primer elemento (error si vacío)</td><td><code>lista.First()</code></td></tr>
+        <tr><td><code>FirstOrDefault()</code></td><td>Primer elemento o null</td><td><code>lista.FirstOrDefault()</code></td></tr>
+        <tr><td><code>Any(condición)</code></td><td>¿Existe alguno que cumpla?</td><td><code>lista.Any(x => x > 10)</code></td></tr>
+        <tr><td><code>All(condición)</code></td><td>¿Todos cumplen la condición?</td><td><code>lista.All(x => x > 0)</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 1 — Notas de estudiantes</h2>
+    <div class="code-label">C# — Estadísticas de notas</div>
+    <pre><code>List&lt;int&gt; notas = new List&lt;int&gt; { 85, 92, 78, 95, 88, 70, 61 };
+
+Console.WriteLine($"Total estudiantes: {notas.Count()}");
+Console.WriteLine($"Nota máxima:       {notas.Max()}");
+Console.WriteLine($"Nota mínima:       {notas.Min()}");
+Console.WriteLine($"Promedio:          {notas.Average():F2}");
+Console.WriteLine($"Suma total:        {notas.Sum()}");
+Console.WriteLine($"¿Alguno reprobó?   {notas.Any(n => n < 70)}");
+Console.WriteLine($"¿Todos aprobaron?  {notas.All(n => n >= 60)}");
+
+// Salida:
+// Total estudiantes: 7
+// Nota máxima:       95
+// Nota mínima:       61
+// Promedio:          81.29
+// Suma total:        569
+// ¿Alguno reprobó?   False
+// ¿Todos aprobaron?  True</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 2 — Agregación sobre objetos</h2>
+    <div class="code-label">C# — Estadísticas de empleados</div>
+    <pre><code>class Empleado
+{
+    public string Nombre  { get; set; }
+    public double Salario { get; set; }
+}
+
+List&lt;Empleado&gt; empleados = new List&lt;Empleado&gt;
+{
+    new Empleado { Nombre="Luis",   Salario=2000 },
+    new Empleado { Nombre="María",  Salario=1800 },
+    new Empleado { Nombre="Carlos", Salario=2200 },
+    new Empleado { Nombre="Sofía",  Salario=1900 },
+    new Empleado { Nombre="Andrés", Salario=2500 }
+};
+
+double total    = empleados.Sum(e => e.Salario);
+double promedio = empleados.Average(e => e.Salario);
+double maximo   = empleados.Max(e => e.Salario);
+double minimo   = empleados.Min(e => e.Salario);
+
+Console.WriteLine($"Total nómina:    ${total}");
+Console.WriteLine($"Salario promedio:${promedio}");
+Console.WriteLine($"Salario más alto:${maximo}");
+Console.WriteLine($"Salario más bajo:${minimo}");
+
+// Obtener el empleado con mayor salario
+var mejorPagado = empleados
+    .OrderByDescending(e => e.Salario)
+    .First();
+
+Console.WriteLine($"Mejor pagado: {mejorPagado.Nombre}");</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 3 — Any y All con condiciones</h2>
+    <div class="code-label">C# — Verificar condiciones en listas</div>
+    <pre><code>List&lt;int&gt; precios = new List&lt;int&gt; { 150, 80, 200, 45, 300 };
+
+// ¿Hay algún precio mayor a 250?
+bool hayCaros = precios.Any(p => p > 250);
+Console.WriteLine($"¿Hay precios > 250? {hayCaros}");   // True
+
+// ¿Todos los precios son mayores a 10?
+bool todosMayores = precios.All(p => p > 10);
+Console.WriteLine($"¿Todos > 10? {todosMayores}");       // True
+
+// ¿Todos son mayores a 100?
+bool todosMay100 = precios.All(p => p > 100);
+Console.WriteLine($"¿Todos > 100? {todosMay100}");       // False</code></pre>
+  </div>
+
+  <div class="callout">
+    <strong>⚠️ Cuidado:</strong> <code>First()</code> lanza una excepción si la colección está vacía. Usa <code>FirstOrDefault()</code> para obtener <code>null</code> en ese caso.
+  </div>
+
+  <div style="display:flex; gap:1rem; margin-top:2rem; flex-wrap:wrap;">
+    <a href="groupby.html" class="btn btn-outline">← GroupBy</a>
+    <a href="join.html" class="btn btn-primary">Siguiente: Join →</a>
+  </div>
+</main>
+
+<footer>
+  <p>Desarrollado por <a href="https://github.com/AngeloChimborazo" target="_blank">AngeloChimborazo</a> · Manual LINQ — Programación Avanzada</p>
+</footer>
+</body>
+</html>
