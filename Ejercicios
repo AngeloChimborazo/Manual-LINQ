@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ejercicios Prácticos | Manual LINQ C#</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Manual LINQ <span>C#</span></div>
+  <a href="index.html">Inicio</a>
+  <a href="introduccion.html">Introducción</a>
+  <a href="where.html">Where</a>
+  <a href="select.html">Select</a>
+  <a href="orderby.html">OrderBy</a>
+  <a href="groupby.html">GroupBy</a>
+  <a href="agregacion.html">Agregación</a>
+  <a href="join.html">Join</a>
+  <a href="ejercicios.html" class="active">Ejercicios</a>
+</nav>
+
+<main class="page">
+  <div class="page-header">
+    <div class="page-eyebrow">Capítulo 8 · Práctica</div>
+    <h1>Ejercicios Prácticos</h1>
+    <p>4 ejercicios con enunciado y solución completa para reforzar lo aprendido.</p>
+  </div>
+
+  <!-- Ejercicio 1 -->
+  <div class="exercise">
+    <div class="exercise-header">
+      <div class="exercise-num">1</div>
+      <div class="exercise-title">Filtrado básico — Temperaturas</div>
+    </div>
+    <div class="exercise-body">
+      <p><strong>Enunciado:</strong> Dada una lista de temperaturas en °C <code>{ 35, 18, 42, 7, 28, 15, 50, 22 }</code>, obtén las temperaturas "calurosas" (mayores a 30°C) y muéstralas en orden descendente.</p>
+      <p><strong>Operadores a usar:</strong> <code>Where</code>, <code>OrderByDescending</code></p>
+      <div class="code-label">C# — Solución</div>
+      <pre><code>List&lt;int&gt; temperaturas = new List&lt;int&gt; { 35, 18, 42, 7, 28, 15, 50, 22 };
+
+var calurosas = temperaturas
+    .Where(t => t > 30)
+    .OrderByDescending(t => t);
+
+Console.WriteLine("Temperaturas calurosas (desc):");
+foreach (var t in calurosas)
+    Console.WriteLine($"  {t}°C");
+
+// Salida:
+// 50°C
+// 42°C
+// 35°C</code></pre>
+    </div>
+  </div>
+
+  <!-- Ejercicio 2 -->
+  <div class="exercise">
+    <div class="exercise-header">
+      <div class="exercise-num">2</div>
+      <div class="exercise-title">Agregación — Ventas diarias</div>
+    </div>
+    <div class="exercise-body">
+      <p><strong>Enunciado:</strong> Tienes las ventas diarias de una semana: <code>{ 1500, 2300, 800, 4100, 950, 3200, 1750 }</code>. Calcula: total, venta máxima, mínima y promedio.</p>
+      <p><strong>Operadores a usar:</strong> <code>Sum</code>, <code>Max</code>, <code>Min</code>, <code>Average</code></p>
+      <div class="code-label">C# — Solución</div>
+      <pre><code>List&lt;double&gt; ventas = new List&lt;double&gt;
+    { 1500, 2300, 800, 4100, 950, 3200, 1750 };
+
+Console.WriteLine($"Total de ventas:  ${ventas.Sum():F2}");
+Console.WriteLine($"Venta más alta:   ${ventas.Max():F2}");
+Console.WriteLine($"Venta más baja:   ${ventas.Min():F2}");
+Console.WriteLine($"Venta promedio:   ${ventas.Average():F2}");
+
+// Salida:
+// Total de ventas:  $16600.00
+// Venta más alta:   $4100.00
+// Venta más baja:   $800.00
+// Venta promedio:   $2371.43</code></pre>
+    </div>
+  </div>
+
+  <!-- Ejercicio 3 -->
+  <div class="exercise">
+    <div class="exercise-header">
+      <div class="exercise-num">3</div>
+      <div class="exercise-title">LINQ con objetos — Biblioteca de libros</div>
+    </div>
+    <div class="exercise-body">
+      <p><strong>Enunciado:</strong> Crea una lista de 5 libros con <code>Titulo</code>, <code>Autor</code>, <code>Anio</code> y <code>Precio</code>. Luego: muestra los libros publicados después de 2015, el libro más barato, y todos ordenados por precio.</p>
+      <p><strong>Operadores a usar:</strong> <code>Where</code>, <code>OrderBy</code>, <code>First</code></p>
+      <div class="code-label">C# — Solución</div>
+      <pre><code>class Libro
+{
+    public string Titulo { get; set; }
+    public string Autor  { get; set; }
+    public int    Anio   { get; set; }
+    public double Precio { get; set; }
+}
+
+List&lt;Libro&gt; libros = new List&lt;Libro&gt;
+{
+    new Libro { Titulo="Clean Code",            Autor="Robert C. Martin", Anio=2008, Precio=45.00 },
+    new Libro { Titulo="The Pragmatic Programmer", Autor="Hunt & Thomas", Anio=2019, Precio=52.00 },
+    new Libro { Titulo="C# in Depth",           Autor="Jon Skeet",        Anio=2019, Precio=48.00 },
+    new Libro { Titulo="Design Patterns",       Autor="GoF",              Anio=1994, Precio=39.00 },
+    new Libro { Titulo="You Don't Know JS",     Autor="Kyle Simpson",     Anio=2018, Precio=30.00 }
+};
+
+// Libros desde 2015
+Console.WriteLine("=== Libros desde 2015 ===");
+foreach (var l in libros.Where(l => l.Anio > 2015).OrderBy(l => l.Anio))
+    Console.WriteLine($"  [{l.Anio}] {l.Titulo} — ${l.Precio}");
+
+// Libro más barato
+var masBarato = libros.OrderBy(l => l.Precio).First();
+Console.WriteLine($"\n=== Más barato: {masBarato.Titulo} (${masBarato.Precio}) ===");
+
+// Todos ordenados por precio
+Console.WriteLine("\n=== Ordenados por precio ===");
+foreach (var l in libros.OrderBy(l => l.Precio))
+    Console.WriteLine($"  ${l.Precio:F2} — {l.Titulo}");
+
+// Salida:
+// === Libros desde 2015 ===
+//   [2018] You Don't Know JS — $30
+//   [2019] The Pragmatic Programmer — $52
+//   [2019] C# in Depth — $48
+//
+// === Más barato: You Don't Know JS ($30) ===
+//
+// === Ordenados por precio ===
+//   $30.00 — You Don't Know JS
+//   $39.00 — Design Patterns
+//   $45.00 — Clean Code
+//   $48.00 — C# in Depth
+//   $52.00 — The Pragmatic Programmer</code></pre>
+    </div>
+  </div>
+
+  <!-- Ejercicio 4 -->
+  <div class="exercise">
+    <div class="exercise-header">
+      <div class="exercise-num">4</div>
+      <div class="exercise-title">GroupBy + Agregación — Inventario de tienda</div>
+    </div>
+    <div class="exercise-body">
+      <p><strong>Enunciado:</strong> Tienes un inventario de productos con categoría y precio. Agrupa por categoría y muestra cuántos productos hay en cada una y el precio promedio.</p>
+      <p><strong>Operadores a usar:</strong> <code>GroupBy</code>, <code>Select</code>, <code>Count</code>, <code>Average</code></p>
+      <div class="code-label">C# — Solución</div>
+      <pre><code>class ProductoTienda
+{
+    public string Categoria { get; set; }
+    public string Nombre    { get; set; }
+    public double Precio    { get; set; }
+}
+
+List&lt;ProductoTienda&gt; inventario = new List&lt;ProductoTienda&gt;
+{
+    new ProductoTienda { Categoria="Electrónico", Nombre="Laptop",   Precio=1200 },
+    new ProductoTienda { Categoria="Electrónico", Nombre="Tablet",   Precio=350  },
+    new ProductoTienda { Categoria="Ropa",        Nombre="Camiseta", Precio=25   },
+    new ProductoTienda { Categoria="Ropa",        Nombre="Pantalón", Precio=55   },
+    new ProductoTienda { Categoria="Ropa",        Nombre="Chaqueta", Precio=120  },
+    new ProductoTienda { Categoria="Electrónico", Nombre="Mouse",    Precio=30   },
+    new ProductoTienda { Categoria="Alimento",    Nombre="Arroz",    Precio=2.5  },
+    new ProductoTienda { Categoria="Alimento",    Nombre="Leche",    Precio=1.8  }
+};
+
+var resumen = inventario
+    .GroupBy(p => p.Categoria)
+    .Select(g => new
+    {
+        Categoria   = g.Key,
+        Cantidad    = g.Count(),
+        PrecioMedio = g.Average(p => p.Precio)
+    })
+    .OrderBy(r => r.Categoria);
+
+Console.WriteLine($"{"Categoría",-15} {"Cant.",6} {"Precio Medio",12}");
+Console.WriteLine(new string('-', 36));
+foreach (var c in resumen)
+    Console.WriteLine($"{c.Categoria,-15} {c.Cantidad,6} {c.PrecioMedio,12:F2}");
+
+// Salida:
+// Categoría       Cant.  Precio Medio
+// ------------------------------------
+// Alimento            2          2.15
+// Electrónico         3        526.67
+// Ropa                3         66.67</code></pre>
+    </div>
+  </div>
+
+  <div style="display:flex; gap:1rem; margin-top:2rem; flex-wrap:wrap;">
+    <a href="join.html" class="btn btn-outline">← Join</a>
+    <a href="index.html" class="btn btn-primary">↑ Volver al inicio</a>
+  </div>
+</main>
+
+<footer>
+  <p>Desarrollado por <a href="https://github.com/AngeloChimborazo" target="_blank">AngeloChimborazo</a> · Manual LINQ — Programación Avanzada</p>
+</footer>
+</body>
+</html>
