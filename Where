@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Where — Filtrado | Manual LINQ C#</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Manual LINQ <span>C#</span></div>
+  <a href="index.html">Inicio</a>
+  <a href="introduccion.html">Introducción</a>
+  <a href="where.html" class="active">Where</a>
+  <a href="select.html">Select</a>
+  <a href="orderby.html">OrderBy</a>
+  <a href="groupby.html">GroupBy</a>
+  <a href="agregacion.html">Agregación</a>
+  <a href="join.html">Join</a>
+  <a href="ejercicios.html">Ejercicios</a>
+</nav>
+
+<main class="page">
+  <div class="page-header">
+    <div class="page-eyebrow">Capítulo 2 · Filtrado</div>
+    <h1>Operador <code style="color:var(--accent2)">Where</code></h1>
+    <p>Filtra los elementos de una colección que cumplen una condición booleana.</p>
+  </div>
+
+  <div class="section">
+    <h2>¿Cómo funciona?</h2>
+    <p><code>Where</code> recibe una función (lambda) que devuelve <code>true</code> o <code>false</code>. Solo pasan los elementos donde la condición es <code>true</code>.</p>
+    <div class="code-label">Estructura</div>
+    <pre><code>coleccion.Where(elemento => condición_booleana)</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 1 — Números</h2>
+    <div class="code-label">C# — Filtrar números mayores a 20</div>
+    <pre><code>List&lt;int&gt; numeros = new List&lt;int&gt; { 10, 25, 3, 47, 8, 60, 15 };
+
+var mayoresA20 = numeros.Where(n => n > 20);
+
+foreach (var n in mayoresA20)
+    Console.Write(n + " ");
+
+// Salida: 25 47 60</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 2 — Condiciones múltiples</h2>
+    <p>Puedes combinar condiciones con <code>&&</code> (Y) y <code>||</code> (O):</p>
+    <div class="code-label">C# — Pares mayores a 4</div>
+    <pre><code>List&lt;int&gt; numeros = new List&lt;int&gt; { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+// Números pares Y mayores a 4
+var resultado = numeros.Where(n => n % 2 == 0 && n > 4);
+
+foreach (var n in resultado)
+    Console.Write(n + " ");
+
+// Salida: 6 8 10</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 3 — Filtrar texto</h2>
+    <div class="code-label">C# — Nombres que empiezan con "A"</div>
+    <pre><code>List&lt;string&gt; nombres = new List&lt;string&gt;
+    { "Ana", "Carlos", "Alberto", "Beatriz", "Andrés" };
+
+var conA = nombres.Where(n => n.StartsWith("A"));
+
+foreach (var nombre in conA)
+    Console.WriteLine(nombre);
+
+// Salida:
+// Ana
+// Alberto
+// Andrés</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 4 — Filtrar objetos</h2>
+    <div class="code-label">C# — Productos con precio menor a 100</div>
+    <pre><code>class Producto
+{
+    public string Nombre { get; set; }
+    public double Precio { get; set; }
+}
+
+List&lt;Producto&gt; productos = new List&lt;Producto&gt;
+{
+    new Producto { Nombre = "Laptop",  Precio = 1200 },
+    new Producto { Nombre = "Mouse",   Precio = 25   },
+    new Producto { Nombre = "Teclado", Precio = 45   },
+    new Producto { Nombre = "Monitor", Precio = 350  }
+};
+
+var economicos = productos.Where(p => p.Precio < 100);
+
+foreach (var p in economicos)
+    Console.WriteLine($"{p.Nombre} — ${p.Precio}");
+
+// Salida:
+// Mouse — $25
+// Teclado — $45</code></pre>
+  </div>
+
+  <div class="callout">
+    <strong>💡 Tip:</strong> <code>Where</code> devuelve un <code>IEnumerable&lt;T&gt;</code>, lo que significa que puedes encadenarlo con otros operadores como <code>.OrderBy()</code>, <code>.Select()</code>, etc.
+  </div>
+
+  <div style="display:flex; gap:1rem; margin-top:2rem; flex-wrap:wrap;">
+    <a href="introduccion.html" class="btn btn-outline">← Introducción</a>
+    <a href="select.html" class="btn btn-primary">Siguiente: Select →</a>
+  </div>
+</main>
+
+<footer>
+  <p>Desarrollado por <a href="https://github.com/AngeloChimborazo" target="_blank">AngeloChimborazo</a> · Manual LINQ — Programación Avanzada</p>
+</footer>
+</body>
+</html>
