@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select — Proyección | Manual LINQ C#</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Manual LINQ <span>C#</span></div>
+  <a href="index.html">Inicio</a>
+  <a href="introduccion.html">Introducción</a>
+  <a href="where.html">Where</a>
+  <a href="select.html" class="active">Select</a>
+  <a href="orderby.html">OrderBy</a>
+  <a href="groupby.html">GroupBy</a>
+  <a href="agregacion.html">Agregación</a>
+  <a href="join.html">Join</a>
+  <a href="ejercicios.html">Ejercicios</a>
+</nav>
+
+<main class="page">
+  <div class="page-header">
+    <div class="page-eyebrow">Capítulo 3 · Proyección</div>
+    <h1>Operador <code style="color:var(--accent2)">Select</code></h1>
+    <p>Transforma cada elemento de una colección en un nuevo valor o tipo.</p>
+  </div>
+
+  <div class="section">
+    <h2>¿Cómo funciona?</h2>
+    <p><code>Select</code> aplica una transformación a cada elemento y devuelve una nueva colección con los resultados. Similar al <code>SELECT</code> de SQL.</p>
+    <div class="code-label">Estructura</div>
+    <pre><code>coleccion.Select(elemento => transformación)</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 1 — Transformar texto</h2>
+    <div class="code-label">C# — Convertir a mayúsculas</div>
+    <pre><code>List&lt;string&gt; nombres = new List&lt;string&gt; { "ana", "carlos", "beatriz" };
+
+var enMayusculas = nombres.Select(n => n.ToUpper());
+
+foreach (var n in enMayusculas)
+    Console.WriteLine(n);
+
+// Salida:
+// ANA
+// CARLOS
+// BEATRIZ</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 2 — Extraer una propiedad</h2>
+    <div class="code-label">C# — Solo los nombres de los productos</div>
+    <pre><code>class Producto
+{
+    public string Nombre { get; set; }
+    public double Precio { get; set; }
+}
+
+List&lt;Producto&gt; productos = new List&lt;Producto&gt;
+{
+    new Producto { Nombre = "Laptop",  Precio = 1200 },
+    new Producto { Nombre = "Mouse",   Precio = 25   },
+    new Producto { Nombre = "Teclado", Precio = 45   }
+};
+
+// Extraer solo los nombres
+var nombres = productos.Select(p => p.Nombre);
+
+foreach (var n in nombres)
+    Console.WriteLine(n);
+
+// Salida: Laptop  Mouse  Teclado</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 3 — Proyección a tipo anónimo</h2>
+    <p>Puedes crear objetos nuevos al vuelo con <code>new { }</code>:</p>
+    <div class="code-label">C# — Calcular precio con IVA</div>
+    <pre><code>var resumen = productos.Select(p => new
+{
+    p.Nombre,
+    PrecioConIVA = p.Precio * 1.12
+});
+
+foreach (var item in resumen)
+    Console.WriteLine($"{item.Nombre}: ${item.PrecioConIVA:F2}");
+
+// Salida:
+// Laptop: $1344.00
+// Mouse: $28.56
+// Teclado: $50.40</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 4 — Where + Select combinados</h2>
+    <p>Encadena operadores para filtrar y luego transformar:</p>
+    <div class="code-label">C# — Nombres de productos económicos en mayúsculas</div>
+    <pre><code>var resultado = productos
+    .Where(p => p.Precio < 100)
+    .Select(p => p.Nombre.ToUpper());
+
+foreach (var n in resultado)
+    Console.WriteLine(n);
+
+// Salida:
+// MOUSE
+// TECLADO</code></pre>
+  </div>
+
+  <div class="callout">
+    <strong>💡 Tip:</strong> <code>Select</code> siempre devuelve la <strong>misma cantidad</strong> de elementos que la colección original — a diferencia de <code>Where</code> que puede devolver menos.
+  </div>
+
+  <div style="display:flex; gap:1rem; margin-top:2rem; flex-wrap:wrap;">
+    <a href="where.html" class="btn btn-outline">← Where</a>
+    <a href="orderby.html" class="btn btn-primary">Siguiente: OrderBy →</a>
+  </div>
+</main>
+
+<footer>
+  <p>Desarrollado por <a href="https://github.com/AngeloChimborazo" target="_blank">AngeloChimborazo</a> · Manual LINQ — Programación Avanzada</p>
+</footer>
+</body>
+</html>
