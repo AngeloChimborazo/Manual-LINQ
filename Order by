@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OrderBy — Ordenamiento | Manual LINQ C#</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Manual LINQ <span>C#</span></div>
+  <a href="index.html">Inicio</a>
+  <a href="introduccion.html">Introducción</a>
+  <a href="where.html">Where</a>
+  <a href="select.html">Select</a>
+  <a href="orderby.html" class="active">OrderBy</a>
+  <a href="groupby.html">GroupBy</a>
+  <a href="agregacion.html">Agregación</a>
+  <a href="join.html">Join</a>
+  <a href="ejercicios.html">Ejercicios</a>
+</nav>
+
+<main class="page">
+  <div class="page-header">
+    <div class="page-eyebrow">Capítulo 4 · Ordenamiento</div>
+    <h1>Operadores <code style="color:var(--accent2)">OrderBy</code> / <code style="color:var(--accent2)">OrderByDescending</code></h1>
+    <p>Ordena colecciones de forma ascendente o descendente, por uno o varios criterios.</p>
+  </div>
+
+  <div class="section">
+    <h2>Resumen de operadores</h2>
+    <table>
+      <thead><tr><th>Operador</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><code>OrderBy(x => x.Prop)</code></td><td>Ascendente (A→Z, 0→9)</td></tr>
+        <tr><td><code>OrderByDescending(x => x.Prop)</code></td><td>Descendente (Z→A, 9→0)</td></tr>
+        <tr><td><code>ThenBy(x => x.Prop)</code></td><td>Segundo criterio ascendente</td></tr>
+        <tr><td><code>ThenByDescending(x => x.Prop)</code></td><td>Segundo criterio descendente</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 1 — Orden ascendente</h2>
+    <div class="code-label">C# — Números de menor a mayor</div>
+    <pre><code>List&lt;int&gt; numeros = new List&lt;int&gt; { 42, 7, 19, 3, 88, 25 };
+
+var ordenados = numeros.OrderBy(n => n);
+
+foreach (var n in ordenados)
+    Console.Write(n + " ");
+
+// Salida: 3 7 19 25 42 88</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 2 — Orden descendente</h2>
+    <div class="code-label">C# — Números de mayor a menor</div>
+    <pre><code>var descendente = numeros.OrderByDescending(n => n);
+
+foreach (var n in descendente)
+    Console.Write(n + " ");
+
+// Salida: 88 42 25 19 7 3</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 3 — Ordenar objetos por propiedad</h2>
+    <div class="code-label">C# — Productos por precio (menor a mayor)</div>
+    <pre><code>class Producto
+{
+    public string Nombre { get; set; }
+    public double Precio { get; set; }
+}
+
+List&lt;Producto&gt; productos = new List&lt;Producto&gt;
+{
+    new Producto { Nombre = "Laptop",  Precio = 1200 },
+    new Producto { Nombre = "Mouse",   Precio = 25   },
+    new Producto { Nombre = "Teclado", Precio = 45   }
+};
+
+var porPrecio = productos.OrderBy(p => p.Precio);
+
+foreach (var p in porPrecio)
+    Console.WriteLine($"{p.Nombre} — ${p.Precio}");
+
+// Salida:
+// Mouse — $25
+// Teclado — $45
+// Laptop — $1200</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 4 — Ordenar por texto</h2>
+    <div class="code-label">C# — Nombres en orden alfabético</div>
+    <pre><code>List&lt;string&gt; nombres = new List&lt;string&gt;
+    { "Carlos", "Ana", "Beatriz", "David", "Alberto" };
+
+var alfabetico = nombres.OrderBy(n => n);
+
+foreach (var n in alfabetico)
+    Console.WriteLine(n);
+
+// Salida: Alberto  Ana  Beatriz  Carlos  David</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 5 — Múltiples criterios con ThenBy</h2>
+    <div class="code-label">C# — Por carrera, luego por promedio</div>
+    <pre><code>class Estudiante
+{
+    public string Nombre   { get; set; }
+    public string Carrera  { get; set; }
+    public double Promedio { get; set; }
+}
+
+List&lt;Estudiante&gt; estudiantes = new List&lt;Estudiante&gt;
+{
+    new Estudiante { Nombre="Ana",    Carrera="Software", Promedio=9.2 },
+    new Estudiante { Nombre="Carlos", Carrera="Redes",    Promedio=7.8 },
+    new Estudiante { Nombre="María",  Carrera="Software", Promedio=8.5 },
+    new Estudiante { Nombre="Luis",   Carrera="Redes",    Promedio=9.0 }
+};
+
+var ordenados = estudiantes
+    .OrderBy(e => e.Carrera)             // 1° por carrera A→Z
+    .ThenByDescending(e => e.Promedio);  // 2° por promedio 9→0
+
+foreach (var e in ordenados)
+    Console.WriteLine($"{e.Carrera} | {e.Nombre} | {e.Promedio}");
+
+// Salida:
+// Redes | Luis   | 9
+// Redes | Carlos | 7.8
+// Software | Ana   | 9.2
+// Software | María | 8.5</code></pre>
+  </div>
+
+  <div style="display:flex; gap:1rem; margin-top:2rem; flex-wrap:wrap;">
+    <a href="select.html" class="btn btn-outline">← Select</a>
+    <a href="groupby.html" class="btn btn-primary">Siguiente: GroupBy →</a>
+  </div>
+</main>
+
+<footer>
+  <p>Desarrollado por <a href="https://github.com/AngeloChimborazo" target="_blank">AngeloChimborazo</a> · Manual LINQ — Programación Avanzada</p>
+</footer>
+</body>
+</html>
