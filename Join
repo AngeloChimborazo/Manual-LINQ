@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join — Unión | Manual LINQ C#</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Manual LINQ <span>C#</span></div>
+  <a href="index.html">Inicio</a>
+  <a href="introduccion.html">Introducción</a>
+  <a href="where.html">Where</a>
+  <a href="select.html">Select</a>
+  <a href="orderby.html">OrderBy</a>
+  <a href="groupby.html">GroupBy</a>
+  <a href="agregacion.html">Agregación</a>
+  <a href="join.html" class="active">Join</a>
+  <a href="ejercicios.html">Ejercicios</a>
+</nav>
+
+<main class="page">
+  <div class="page-header">
+    <div class="page-eyebrow">Capítulo 7 · Unión de colecciones</div>
+    <h1>Operador <code style="color:var(--accent2)">Join</code></h1>
+    <p>Combina dos colecciones basándose en una clave común — como el INNER JOIN de SQL.</p>
+  </div>
+
+  <div class="section">
+    <h2>¿Cómo funciona?</h2>
+    <p><code>Join</code> une dos listas cuando un campo de una coincide con un campo de la otra.</p>
+    <div class="code-label">Estructura</div>
+    <pre><code>coleccion1.Join(
+    coleccion2,
+    c1 => c1.ClaveDe1,    // Clave de la primera colección
+    c2 => c2.ClaveDe2,    // Clave de la segunda colección
+    (c1, c2) => new { }   // Resultado combinado
+)</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 1 — Clientes y Pedidos</h2>
+    <div class="code-label">C# — Unir clientes con sus pedidos</div>
+    <pre><code>class Cliente
+{
+    public int    Id     { get; set; }
+    public string Nombre { get; set; }
+}
+
+class Pedido
+{
+    public int    ClienteId   { get; set; }
+    public string Descripcion { get; set; }
+    public double Total       { get; set; }
+}
+
+List&lt;Cliente&gt; clientes = new List&lt;Cliente&gt;
+{
+    new Cliente { Id=1, Nombre="Ana García"   },
+    new Cliente { Id=2, Nombre="Pedro López"  },
+    new Cliente { Id=3, Nombre="Lucía Torres" }
+};
+
+List&lt;Pedido&gt; pedidos = new List&lt;Pedido&gt;
+{
+    new Pedido { ClienteId=1, Descripcion="Laptop",  Total=1200 },
+    new Pedido { ClienteId=1, Descripcion="Mouse",   Total=25   },
+    new Pedido { ClienteId=2, Descripcion="Teclado", Total=45   },
+    new Pedido { ClienteId=3, Descripcion="Monitor", Total=350  }
+};
+
+var resultado = clientes.Join(
+    pedidos,
+    c => c.Id,
+    p => p.ClienteId,
+    (c, p) => new
+    {
+        Cliente  = c.Nombre,
+        Producto = p.Descripcion,
+        p.Total
+    }
+);
+
+foreach (var item in resultado)
+    Console.WriteLine($"{item.Cliente} compró: {item.Producto} por ${item.Total}");
+
+// Salida:
+// Ana García compró: Laptop por $1200
+// Ana García compró: Mouse por $25
+// Pedro López compró: Teclado por $45
+// Lucía Torres compró: Monitor por $350</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Ejemplo 2 — Estudiantes y Carreras</h2>
+    <div class="code-label">C# — Unir estudiantes con su carrera completa</div>
+    <pre><code>class Estudiante
+{
+    public int    Id       { get; set; }
+    public string Nombre   { get; set; }
+    public int    CarreraId{ get; set; }
+}
+
+class Carrera
+{
+    public int    Id     { get; set; }
+    public string Nombre { get; set; }
+    public int    Duracion{ get; set; } // semestres
+}
+
+List&lt;Estudiante&gt; estudiantes = new List&lt;Estudiante&gt;
+{
+    new Estudiante { Id=1, Nombre="Ana",    CarreraId=1 },
+    new Estudiante { Id=2, Nombre="Carlos", CarreraId=2 },
+    new Estudiante { Id=3, Nombre="María",  CarreraId=1 }
+};
+
+List&lt;Carrera&gt; carreras = new List&lt;Carrera&gt;
+{
+    new Carrera { Id=1, Nombre="Ing. Software", Duracion=10 },
+    new Carrera { Id=2, Nombre="Ing. Redes",    Duracion=8  }
+};
+
+var union = estudiantes.Join(
+    carreras,
+    e => e.CarreraId,
+    c => c.Id,
+    (e, c) => new
+    {
+        Estudiante = e.Nombre,
+        Carrera    = c.Nombre,
+        c.Duracion
+    }
+);
+
+foreach (var u in union)
+    Console.WriteLine($"{u.Estudiante} → {u.Carrera} ({u.Duracion} semestres)");
+
+// Salida:
+// Ana    → Ing. Software (10 semestres)
+// Carlos → Ing. Redes    (8 semestres)
+// María  → Ing. Software (10 semestres)</code></pre>
+  </div>
+
+  <div class="callout">
+    <strong>💡 Tip:</strong> El operador <code>Join</code> solo incluye elementos que tienen coincidencia en ambas colecciones (como un INNER JOIN). Si un cliente no tiene pedidos, no aparecerá en el resultado.
+  </div>
+
+  <div style="display:flex; gap:1rem; margin-top:2rem; flex-wrap:wrap;">
+    <a href="agregacion.html" class="btn btn-outline">← Agregación</a>
+    <a href="ejercicios.html" class="btn btn-primary">Siguiente: Ejercicios →</a>
+  </div>
+</main>
+
+<footer>
+  <p>Desarrollado por <a href="https://github.com/AngeloChimborazo" target="_blank">AngeloChimborazo</a> · Manual LINQ — Programación Avanzada</p>
+</footer>
+</body>
+</html>
