@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introducción a LINQ — Manual LINQ C#</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Manual LINQ <span>C#</span></div>
+  <a href="index.html">Inicio</a>
+  <a href="introduccion.html" class="active">Introducción</a>
+  <a href="where.html">Where</a>
+  <a href="select.html">Select</a>
+  <a href="orderby.html">OrderBy</a>
+  <a href="groupby.html">GroupBy</a>
+  <a href="agregacion.html">Agregación</a>
+  <a href="join.html">Join</a>
+  <a href="ejercicios.html">Ejercicios</a>
+</nav>
+
+<main class="page">
+  <div class="page-header">
+    <div class="page-eyebrow">Capítulo 1</div>
+    <h1>Introducción a LINQ</h1>
+    <p>¿Qué es LINQ y por qué hace tu código más limpio y expresivo?</p>
+  </div>
+
+  <!-- ¿Qué es? -->
+  <div class="section">
+    <h2>¿Qué es LINQ?</h2>
+    <p><strong>LINQ</strong> (Language Integrated Query) es una característica de C# que permite realizar consultas directamente sobre colecciones de datos usando una sintaxis integrada en el lenguaje.</p>
+    <p>Con LINQ puedes trabajar sobre listas, arreglos, bases de datos, archivos XML y más, todo con la misma sintaxis.</p>
+
+    <div class="callout">
+      <strong>💡 En resumen:</strong> LINQ es como tener SQL directamente dentro de C#, pero aplicable a cualquier tipo de colección.
+    </div>
+  </div>
+
+  <!-- ¿Para qué sirve? -->
+  <div class="section">
+    <h2>¿Para qué sirve?</h2>
+    <table>
+      <thead><tr><th>Necesidad</th><th>Sin LINQ</th><th>Con LINQ</th></tr></thead>
+      <tbody>
+        <tr><td>Filtrar datos</td><td>Bucle foreach + if</td><td><code>.Where()</code></td></tr>
+        <tr><td>Transformar datos</td><td>Bucle + lista nueva</td><td><code>.Select()</code></td></tr>
+        <tr><td>Ordenar</td><td><code>Array.Sort()</code></td><td><code>.OrderBy()</code></td></tr>
+        <tr><td>Contar / sumar</td><td>Variable acumuladora</td><td><code>.Count()</code> / <code>.Sum()</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Namespace -->
+  <div class="section">
+    <h2>Namespace necesario</h2>
+    <p>Para usar LINQ debes agregar este using al inicio de tu archivo:</p>
+    <div class="code-label">C# — using requerido</div>
+    <pre><code>using System;
+using System.Collections.Generic;
+using System.Linq;  // ← Este es el que activa LINQ</code></pre>
+  </div>
+
+  <!-- Dos sintaxis -->
+  <div class="section">
+    <h2>Dos sintaxis equivalentes</h2>
+    <p>LINQ tiene dos formas de escribirse — ambas producen exactamente el mismo resultado:</p>
+
+    <h3>1. Sintaxis de consulta (estilo SQL)</h3>
+    <div class="code-label">C# — Query Syntax</div>
+    <pre><code>int[] numeros = { 5, 3, 8, 1, 9, 2, 7 };
+
+var resultado = from n in numeros
+                where n > 4
+                orderby n
+                select n;
+
+// Resultado: 5 7 8 9</code></pre>
+
+    <h3>2. Sintaxis de métodos (recomendada)</h3>
+    <div class="code-label">C# — Method Syntax</div>
+    <pre><code>int[] numeros = { 5, 3, 8, 1, 9, 2, 7 };
+
+var resultado = numeros
+    .Where(n => n > 4)
+    .OrderBy(n => n);
+
+// Resultado: 5 7 8 9</code></pre>
+
+    <div class="callout">
+      <strong>✅ Recomendación:</strong> Se prefiere la <strong>sintaxis de métodos</strong> en el mundo profesional porque es más flexible y compatible con todos los operadores LINQ.
+    </div>
+  </div>
+
+  <!-- Expresiones lambda -->
+  <div class="section">
+    <h2>Expresiones Lambda</h2>
+    <p>La sintaxis de métodos usa <strong>expresiones lambda</strong> para definir condiciones. Son funciones anónimas compactas:</p>
+    <div class="code-label">C# — Lambda básica</div>
+    <pre><code>// Forma:  parametro => expresión
+n => n > 4          // n es mayor a 4?
+p => p.Precio       // la propiedad Precio de p
+e => e.Departamento // la propiedad Departamento de e</code></pre>
+  </div>
+
+  <div style="display:flex; gap:1rem; margin-top:2rem; flex-wrap:wrap;">
+    <a href="index.html" class="btn btn-outline">← Inicio</a>
+    <a href="where.html" class="btn btn-primary">Siguiente: Where →</a>
+  </div>
+</main>
+
+<footer>
+  <p>Desarrollado por <a href="https://github.com/AngeloChimborazo" target="_blank">AngeloChimborazo</a> · Manual LINQ — Programación Avanzada</p>
+</footer>
+</body>
+</html>
