@@ -191,11 +191,276 @@ foreach (var c in resumen)
 // Ropa                3         66.67</code></pre>
     </div>
   </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ejercicios Prácticos | Manual LINQ C#</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Manual LINQ <span>C#</span></div>
+  <a href="index.html">Inicio</a>
+  <a href="introduccion.html">Introducción</a>
+  <a href="where.html">Where</a>
+  <a href="select.html">Select</a>
+  <a href="orderby.html">OrderBy</a>
+  <a href="groupby.html">GroupBy</a>
+  <a href="agregacion.html">Agregación</a>
+  <a href="join.html">Join</a>
+  <a href="ejercicios.html" class="active">Ejercicios</a>
+</nav>
+
+<main class="page">
+  <div class="page-header">
+    <div class="page-eyebrow">Capítulo 8 · Práctica</div>
+    <h1>Ejercicios Prácticos</h1>
+    <p>5 ejercicios con enunciado y solución completa para reforzar lo aprendido.</p>
+  </div>
+
+  <!-- Ejercicio 1 -->
+  <div class="exercise">
+    <div class="exercise-header">
+      <div class="exercise-num">1</div>
+      <div class="exercise-title">Filtrado básico — Temperaturas</div>
+    </div>
+    <div class="exercise-body">
+      <p><strong>Enunciado:</strong> Dada una lista de temperaturas en °C <code>{ 35, 18, 42, 7, 28, 15, 50, 22 }</code>, obtén las temperaturas "calurosas" (mayores a 30°C) y muéstralas en orden descendente.</p>
+      <p><strong>Operadores:</strong> <code>Where</code>, <code>OrderByDescending</code></p>
+      <div class="code-label">C# — Solución</div>
+      <pre><code>List&lt;int&gt; temperaturas = new List&lt;int&gt; { 35, 18, 42, 7, 28, 15, 50, 22 };
+
+var calurosas = temperaturas
+    .Where(t => t > 30)
+    .OrderByDescending(t => t);
+
+foreach (var t in calurosas)
+    Console.WriteLine($"  {t}°C");
+
+// Salida: 50°C  42°C  35°C</code></pre>
+    </div>
+  </div>
+
+  <!-- Ejercicio 2 -->
+  <div class="exercise">
+    <div class="exercise-header">
+      <div class="exercise-num">2</div>
+      <div class="exercise-title">Agregación — Ventas diarias</div>
+    </div>
+    <div class="exercise-body">
+      <p><strong>Enunciado:</strong> Tienes las ventas diarias de una semana: <code>{ 1500, 2300, 800, 4100, 950, 3200, 1750 }</code>. Calcula: total, venta máxima, mínima y promedio.</p>
+      <p><strong>Operadores:</strong> <code>Sum</code>, <code>Max</code>, <code>Min</code>, <code>Average</code></p>
+      <div class="code-label">C# — Solución</div>
+      <pre><code>List&lt;double&gt; ventas = new List&lt;double&gt;
+    { 1500, 2300, 800, 4100, 950, 3200, 1750 };
+
+Console.WriteLine($"Total:   ${ventas.Sum():F2}");
+Console.WriteLine($"Máxima:  ${ventas.Max():F2}");
+Console.WriteLine($"Mínima:  ${ventas.Min():F2}");
+Console.WriteLine($"Promedio:${ventas.Average():F2}");
+
+// Salida:
+// Total:   $16600.00
+// Máxima:  $4100.00
+// Mínima:  $800.00
+// Promedio:$2371.43</code></pre>
+    </div>
+  </div>
+
+  <!-- Ejercicio 3 -->
+  <div class="exercise">
+    <div class="exercise-header">
+      <div class="exercise-num">3</div>
+      <div class="exercise-title">LINQ con objetos — Biblioteca de libros</div>
+    </div>
+    <div class="exercise-body">
+      <p><strong>Enunciado:</strong> Crea una lista de 5 libros con <code>Titulo</code>, <code>Autor</code>, <code>Anio</code> y <code>Precio</code>. Muestra los publicados después de 2015, el más barato, y todos ordenados por precio.</p>
+      <p><strong>Operadores:</strong> <code>Where</code>, <code>OrderBy</code>, <code>First</code></p>
+      <div class="code-label">C# — Solución</div>
+      <pre><code>class Libro
+{
+    public string Titulo { get; set; }
+    public string Autor  { get; set; }
+    public int    Anio   { get; set; }
+    public double Precio { get; set; }
+}
+
+List&lt;Libro&gt; libros = new List&lt;Libro&gt;
+{
+    new Libro { Titulo="Clean Code",     Autor="R. Martin", Anio=2008, Precio=45.00 },
+    new Libro { Titulo="Pragmatic Prog.",Autor="Hunt",      Anio=2019, Precio=52.00 },
+    new Libro { Titulo="C# in Depth",   Autor="J. Skeet",  Anio=2019, Precio=48.00 },
+    new Libro { Titulo="Design Patterns",Autor="GoF",       Anio=1994, Precio=39.00 },
+    new Libro { Titulo="You Don't Know JS",Autor="Simpson", Anio=2018, Precio=30.00 }
+};
+
+// Libros desde 2015
+foreach (var l in libros.Where(l => l.Anio > 2015).OrderBy(l => l.Anio))
+    Console.WriteLine($"[{l.Anio}] {l.Titulo} — ${l.Precio}");
+
+// Libro más barato
+var barato = libros.OrderBy(l => l.Precio).First();
+Console.WriteLine($"Más barato: {barato.Titulo} (${barato.Precio})");</code></pre>
+    </div>
+  </div>
+
+  <!-- Ejercicio 4 -->
+  <div class="exercise">
+    <div class="exercise-header">
+      <div class="exercise-num">4</div>
+      <div class="exercise-title">GroupBy + Agregación — Inventario de tienda</div>
+    </div>
+    <div class="exercise-body">
+      <p><strong>Enunciado:</strong> Tienes un inventario de productos con categoría y precio. Agrupa por categoría y muestra cuántos productos hay y el precio promedio de cada una.</p>
+      <p><strong>Operadores:</strong> <code>GroupBy</code>, <code>Select</code>, <code>Count</code>, <code>Average</code></p>
+      <div class="code-label">C# — Solución</div>
+      <pre><code>class Producto
+{
+    public string Categoria { get; set; }
+    public string Nombre    { get; set; }
+    public double Precio    { get; set; }
+}
+
+List&lt;Producto&gt; inventario = new List&lt;Producto&gt;
+{
+    new Producto { Categoria="Electrónico", Nombre="Laptop",   Precio=1200 },
+    new Producto { Categoria="Electrónico", Nombre="Tablet",   Precio=350  },
+    new Producto { Categoria="Ropa",        Nombre="Camiseta", Precio=25   },
+    new Producto { Categoria="Ropa",        Nombre="Pantalón", Precio=55   },
+    new Producto { Categoria="Alimento",    Nombre="Arroz",    Precio=2.5  },
+    new Producto { Categoria="Alimento",    Nombre="Leche",    Precio=1.8  }
+};
+
+var resumen = inventario
+    .GroupBy(p => p.Categoria)
+    .Select(g => new
+    {
+        Categoria   = g.Key,
+        Cantidad    = g.Count(),
+        PrecioMedio = g.Average(p => p.Precio)
+    });
+
+foreach (var c in resumen)
+    Console.WriteLine($"{c.Categoria}: {c.Cantidad} items, promedio ${c.PrecioMedio:F2}");
+
+// Salida:
+// Electrónico: 2 items, promedio $775.00
+// Ropa:        2 items, promedio $40.00
+// Alimento:    2 items, promedio $2.15</code></pre>
+    </div>
+  </div>
+
+  <!-- Ejercicio 5 — Del examen (Infracciones) -->
+  <div class="exercise">
+    <div class="exercise-header">
+      <div class="exercise-num">5</div>
+      <div class="exercise-title">Caso real — Sistema de Infracciones de Tráfico</div>
+    </div>
+    <div class="exercise-body">
+      <p><strong>Contexto:</strong> Tienes una lista de infracciones de tráfico con los campos: <code>Ciudad</code>, <code>MarcaVehiculo</code>, <code>AñoVehiculo</code>, <code>TipoVehiculo</code>, <code>FechaInfraccion</code>, <code>TipoInfraccion</code>, <code>MontoMulta</code> e <code>InteresMulta</code>. Resuelve las siguientes consultas usando LINQ.</p>
+
+      <div class="code-label">C# — Clase entidad</div>
+      <pre><code>class Infraccion
+{
+    public string   Ciudad          { get; set; }
+    public string   MarcaVehiculo   { get; set; }
+    public int      AñoVehiculo     { get; set; }
+    public string   TipoVehiculo    { get; set; }
+    public DateTime FechaInfraccion { get; set; }
+    public string   TipoInfraccion  { get; set; }
+    public decimal  MontoMulta      { get; set; }
+    public decimal  InteresMulta    { get; set; }
+}</code></pre>
+
+      <h3 style="color:var(--accent3); margin:1.2rem 0 0.5rem;">Consulta A — Top 30 por interés de multa (descendente)</h3>
+      <div class="code-label">C# — Solución A</div>
+      <pre><code>// Obtener los 30 registros con mayor interés de multa
+var top30 = infracciones
+    .OrderByDescending(i => i.InteresMulta)
+    .Take(30);
+
+foreach (var i in top30)
+    Console.WriteLine($"{i.Ciudad} | {i.MarcaVehiculo} | ${i.InteresMulta}");</code></pre>
+
+      <h3 style="color:var(--accent3); margin:1.2rem 0 0.5rem;">Consulta B — Promedio de interés de multa por tipo de infracción</h3>
+      <div class="code-label">C# — Solución B</div>
+      <pre><code>var promedioPorTipo = infracciones
+    .GroupBy(i => i.TipoInfraccion)
+    .Select(g => new
+    {
+        TipoInfraccion = g.Key,
+        Promedio       = g.Average(i => i.InteresMulta)
+    });
+
+foreach (var item in promedioPorTipo)
+    Console.WriteLine($"{item.TipoInfraccion}: ${item.Promedio:F2}");</code></pre>
+
+      <h3 style="color:var(--accent3); margin:1.2rem 0 0.5rem;">Consulta C — Suma de monto de multa por marca (años 2022-2024, meses ene-mar)</h3>
+      <div class="code-label">C# — Solución C</div>
+      <pre><code>var sumaPorMarca = infracciones
+    .Where(i => i.AñoVehiculo >= 2022 && i.AñoVehiculo <= 2024
+             && i.FechaInfraccion.Month >= 1
+             && i.FechaInfraccion.Month <= 3)
+    .GroupBy(i => i.MarcaVehiculo)
+    .Select(g => new
+    {
+        Marca = g.Key,
+        Suma  = g.Sum(i => i.MontoMulta)
+    });
+
+foreach (var item in sumaPorMarca)
+    Console.WriteLine($"{item.Marca}: ${item.Suma:F2}");</code></pre>
+
+      <h3 style="color:var(--accent3); margin:1.2rem 0 0.5rem;">Consulta D — Promedio de interés de multa por ciudad</h3>
+      <div class="code-label">C# — Solución D</div>
+      <pre><code>var promedioPorCiudad = infracciones
+    .GroupBy(i => i.Ciudad)
+    .Select(g => new
+    {
+        Ciudad   = g.Key,
+        Promedio = g.Average(i => i.InteresMulta)
+    });
+
+foreach (var item in promedioPorCiudad)
+    Console.WriteLine($"{item.Ciudad}: ${item.Promedio:F2}");</code></pre>
+
+      <h3 style="color:var(--accent3); margin:1.2rem 0 0.5rem;">Consulta E — Promedio total a pagar (monto + interés) por tipo de vehículo</h3>
+      <p style="color:var(--text-muted); font-size:0.88rem;">Filtro: solo infracciones de tipo "suspensión_licencia" y vehículos tipo "estado".</p>
+      <div class="code-label">C# — Solución E</div>
+      <pre><code>var totalPagar = infracciones
+    .Where(i => i.TipoInfraccion == "suspensión_licencia"
+             && i.TipoVehiculo   == "estado")
+    .GroupBy(i => i.TipoVehiculo)
+    .Select(g => new
+    {
+        TipoVehiculo = g.Key,
+        TotalPagar   = g.Average(i => i.MontoMulta + i.InteresMulta)
+    });
+
+foreach (var item in totalPagar)
+    Console.WriteLine($"{item.TipoVehiculo}: ${item.TotalPagar:F2}");</code></pre>
+    </div>
+  </div>
 
   <div style="display:flex; gap:1rem; margin-top:2rem; flex-wrap:wrap;">
     <a href="join.html" class="btn btn-outline">← Join</a>
     <a href="index.html" class="btn btn-primary">↑ Volver al inicio</a>
   </div>
+</main>
+
+<footer>
+  <p>Desarrollado por <a href="https://github.com/AngeloChimborazo" target="_blank">AngeloChimborazo</a> · Manual LINQ — Programación Avanzada</p>
+</footer>
+</body>
+</html>
+  <div style="display:flex; gap:1rem; margin-top:2rem; flex-wrap:wrap;">
+    <a href="join.html" class="btn btn-outline">← Join</a>
+    <a href="index.html" class="btn btn-primary">↑ Volver al inicio</a>
+  </div>
+  
 </main>
 
 <footer>
